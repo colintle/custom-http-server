@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <string>
+#include <queue>
 
 HttpMethods method_select(char* method)
 {
@@ -41,19 +42,24 @@ HttpMethods method_select(char* method)
     {
         return TRACE;
     }
+
+    return GET;
 }
 
 HttpRequest::HttpRequest(char* request_string)
 {
-    for (int i = 0; i < strlen(request_string) - 1; i++)
+    char requested[strlen(request_string)];
+    strcpy(requested, request_string);
+
+    for (unsigned long i = 0; i < strlen(requested) - 2; i++)
     {
-        if (request_string[i] == '\n' && request_string[i + 1] == '\n')
+        if (requested[i] == '\n' && requested[i + 1] == '\n')
         {
-            request_string[i+1] = '| ';
+            requested[i+1] = '|';
             break;
         }
     }
-    char* request_line = strtok(request_string, "\n");
+    char* request_line = strtok(requested, "\n");
     char* header_fields = strtok(NULL, "|");
     char* body = strtok(NULL, "|");
 
@@ -69,5 +75,22 @@ HttpRequest::HttpRequest(char* request_string)
 
     this->version = atof(version);
 
-    return;
+    this->header_fields = std::unordered_map<char*, char*>();
+    std::queue<char*> header_fields_queue;
+    char* token = strtok(header_fields, "\n");
+    while (token != NULL)
+    {
+        header_fields_queue.push(token);
+        token = strtok(NULL, "\n");
+    }
+
+    char* header = header_fields_queue.front();
+    while (header != NULL)
+    {
+        char* key = strtok(header, ":");
+        char* value = strtok(NULL, ":");
+        this->header_fields[key] = value;
+        header_fields_queue.pop();
+        header = header_fields_queue.front();
+    }
 }

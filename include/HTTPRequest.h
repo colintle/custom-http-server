@@ -1,6 +1,7 @@
 #ifndef HTTPREQUEST_H
 #define HTTPREQUEST_H
 
+#include <unordered_map>
 #include <stdio.h>
 
 enum HttpMethods
@@ -22,6 +23,7 @@ class HttpRequest
         HttpMethods method;
         char* uri;
         float version;
+        std::unordered_map<char*, char*> header_fields;
 
     public:
         HttpRequest(char* request_string);
@@ -31,4 +33,4 @@ class HttpRequest
         ~HttpRequest();
 };
 
-#endif HTTPREQUEST_H
+#endif
