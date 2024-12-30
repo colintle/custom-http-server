@@ -20,16 +20,15 @@ enum HttpMethods
 class HttpRequest
 {
     private:
-        HttpMethods method;
-        char* uri;
-        float version;
+        std::unordered_map<std::string, std::string> request_line_fields;
         std::unordered_map<char*, char*> header_fields;
+        std::unordered_map<char*, char*> body_fields;
 
     public:
         HttpRequest(char* request_string);
-        HttpMethods get_method();
-        char* get_uri();
-        float get_version();
+        std::unordered_map<std::string, std::string> get_request_line_fields();
+        std::unordered_map<char*, char*> get_header_fields();
+        std::unordered_map<char*, char*> get_body_fields();
         ~HttpRequest();
 };
 

@@ -2,48 +2,72 @@
 
 #include <stdio.h>
 #include <string>
-#include <queue>
 
-HttpMethods method_select(char* method)
+std::unordered_map<char*, char*> parse_header_fields(char* header_fields)
 {
-    if (strcmp(method, "GET") == 0)
+    std::unordered_map<char*, char*> headers = std::unordered_map<char*, char*>();
+    char* token = strtok(header_fields, "\n");
+    while (token != NULL)
     {
-        return GET;
+        char* key = strtok(token, ":");
+        char* value = strtok(NULL, ":");
+        headers[key] = value;
+        token = strtok(NULL, "\n");
     }
-    else if (strcmp(method, "POST") == 0)
-    {
-        return POST;
-    }
-    else if (strcmp(method, "PUT") == 0)
-    {
-        return PUT;
-    }
-    else if (strcmp(method, "HEAD") == 0)
-    {
-        return HEAD;
-    }
-    else if (strcmp(method, "PATCH") == 0)
-    {
-        return PATCH;
-    }
-    else if (strcmp(method, "DELETE") == 0)
-    {
-        return DELETE;
-    }
-    else if (strcmp(method, "CONNECT") == 0)
-    {
-        return CONNECT;
-    }
-    else if (strcmp(method, "OPTIONS") == 0)
-    {
-        return OPTIONS;
-    }
-    else if (strcmp(method, "TRACE") == 0)
-    {
-        return TRACE;
-    }
+    return headers;
+}
 
-    return GET;
+std::unordered_map<std::string, std::string> parse_request_line_fields(char* request_line_fields)
+{
+    std::unordered_map<std::string, std::string> request_line = std::unordered_map<std::string, std::string>();
+    char* method = strtok(request_line_fields, " ");
+    request_line["method"] = std::string(method);
+
+    char* uri = strtok(NULL, " ");
+    request_line["uri"] = std::string(uri);
+
+    char* version = strtok(NULL, " ");
+    version = strtok(version, "/");
+    version = strtok(NULL, "/");
+ 
+    request_line["version"] = std::string(version);
+
+    return request_line;
+}
+
+std::unordered_map<char*, char*> parse_body_fields(char* body_fields, char* content_type)
+{
+    std::unordered_map<char*, char*> body = std::unordered_map<char*, char*>();
+    if (content_type)
+    {        
+        if (strcmp(content_type, "application/x-www-form-urlencoded") == 0)
+        {
+            char* token = strtok(body_fields, "&");
+            while (token != NULL)
+            {
+                char* key = strtok(token, "=");
+                char* value = strtok(NULL, "=");
+                body[key] = value;
+                token = strtok(NULL, "&");
+            }
+        }
+        else if (strcmp(content_type, "application/json") == 0)
+        {
+            char* token = strtok(body_fields, ",");
+            while (token != NULL)
+            {
+                char* key = strtok(token, ":");
+                char* value = strtok(NULL, ":");
+                body[key] = value;
+                token = strtok(NULL, ",");
+            }
+        }
+        else
+        {
+            body["body"] = body_fields;
+        }
+    }
+    return body;
 }
 
 HttpRequest::HttpRequest(char* request_string)
@@ -63,34 +87,32 @@ HttpRequest::HttpRequest(char* request_string)
     char* header_fields = strtok(NULL, "|");
     char* body = strtok(NULL, "|");
 
-    char* method = strtok(request_line, " ");
-    this->method = method_select(method);
+    this->request_line_fields = parse_request_line_fields(request_line);
+    this->header_fields = parse_header_fields(header_fields);
 
-    char* uri = strtok(NULL, " ");
-    this->uri = uri;
-
-    char* version = strtok(NULL, " ");
-    version = strtok(version, "/");
-    version = strtok(NULL, "/");
-
-    this->version = atof(version);
-
-    this->header_fields = std::unordered_map<char*, char*>();
-    std::queue<char*> header_fields_queue;
-    char* token = strtok(header_fields, "\n");
-    while (token != NULL)
+    if (this->request_line_fields["method"] == "POST")
     {
-        header_fields_queue.push(token);
-        token = strtok(NULL, "\n");
+        this->body_fields = parse_body_fields(body, this->header_fields["Content-Type"]);
     }
+}
 
-    char* header = header_fields_queue.front();
-    while (header != NULL)
-    {
-        char* key = strtok(header, ":");
-        char* value = strtok(NULL, ":");
-        this->header_fields[key] = value;
-        header_fields_queue.pop();
-        header = header_fields_queue.front();
-    }
+std::unordered_map<std::string, std::string> HttpRequest::get_request_line_fields()
+{
+    return this->request_line_fields;
+}
+
+std::unordered_map<char*, char*> HttpRequest::get_header_fields()
+{
+    return this->header_fields;
+}
+
+std::unordered_map<char*, char*> HttpRequest::get_body_fields()
+{
+    return this->body_fields;
+}
+
+HttpRequest::~HttpRequest()
+{
+    this->request_line_fields.clear();
+    this->header_fields.clear();
 }

@@ -1,7 +1,7 @@
 #include <iostream>
 #include <unistd.h>
 #include <server.h>
-
+#include <HTTPRequest.h>
 
 void launch_server(Server& server){
 	while (true){
@@ -14,6 +14,10 @@ void launch_server(Server& server){
 		read(new_socket, buffer, 30000);
 
 		std::cout << "Data: " << buffer << std::endl;
+		HttpRequest request = HttpRequest(buffer);
+
+		std::cout << "Request Line: " << std::endl;
+		std::cout << request.get_request_line_fields()["method"] << " " << request.get_request_line_fields()["uri"] << " " << request.get_request_line_fields()["version"] << std::endl;
 
 		const char* hello = "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: 12\n\nHello world!";
 		write(new_socket, hello, strlen(hello));
