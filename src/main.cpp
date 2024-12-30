@@ -5,15 +5,15 @@
 
 void launch_server(Server& server){
 	while (true){
-		char buffer[30000];
+		char buffer[60000];
 
 		std::cout << "Waiting for Connection" << std::endl;
 
 		int addr_size = sizeof(server.get_address());
 		int new_socket = accept(server.get_socket_fd(), (struct sockaddr *)&server.get_address(), (socklen_t*)&addr_size);
-		read(new_socket, buffer, 30000);
+		read(new_socket, buffer, 60000);
 
-		std::cout << "Data: " << buffer << std::endl;
+		//std::cout << "Data: " << buffer << std::endl;
 		HttpRequest request = HttpRequest(buffer);
 
 		std::cout << "Request Line: " << std::endl;

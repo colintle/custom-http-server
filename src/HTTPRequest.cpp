@@ -1,17 +1,26 @@
 #include "HTTPRequest.h"
 
-#include <stdio.h>
-#include <string>
+#include <iostream>
 
-std::unordered_map<char*, char*> parse_header_fields(char* header_fields)
+std::unordered_map<std::string, std::string> parse_header_fields(char* header_fields)
 {
-    std::unordered_map<char*, char*> headers = std::unordered_map<char*, char*>();
+    std::unordered_map<std::string, std::string> headers;
+
     char* token = strtok(header_fields, "\n");
     while (token != NULL)
     {
-        char* key = strtok(token, ":");
-        char* value = strtok(NULL, ":");
-        headers[key] = value;
+        char* colon_pos = strchr(token, ':');
+        if (colon_pos != NULL)
+        {
+            std::string key(token, colon_pos - token);
+            std::string value(colon_pos + 1);
+
+            size_t start = value.find_first_not_of(" ");
+            size_t end = value.find_last_not_of(" ");
+            value = value.substr(start, end - start + 1);
+
+            headers[key] = value;
+        }
         token = strtok(NULL, "\n");
     }
     return headers;
@@ -35,36 +44,36 @@ std::unordered_map<std::string, std::string> parse_request_line_fields(char* req
     return request_line;
 }
 
-std::unordered_map<char*, char*> parse_body_fields(char* body_fields, char* content_type)
+std::unordered_map<std::string, std::string> parse_body_fields(char* body_fields, std::string content_type)
 {
-    std::unordered_map<char*, char*> body = std::unordered_map<char*, char*>();
-    if (content_type)
+    std::unordered_map<std::string, std::string> body = std::unordered_map<std::string, std::string>();
+    if (!content_type.empty())
     {        
-        if (strcmp(content_type, "application/x-www-form-urlencoded") == 0)
+        if ((content_type.compare("application/x-www-form-urlencoded")) == 0)
         {
             char* token = strtok(body_fields, "&");
             while (token != NULL)
             {
                 char* key = strtok(token, "=");
                 char* value = strtok(NULL, "=");
-                body[key] = value;
+                body[std::string(key)] = std::string(value);
                 token = strtok(NULL, "&");
             }
         }
-        else if (strcmp(content_type, "application/json") == 0)
+        else if ((content_type.compare("application/json")) == 0)
         {
             char* token = strtok(body_fields, ",");
             while (token != NULL)
             {
                 char* key = strtok(token, ":");
                 char* value = strtok(NULL, ":");
-                body[key] = value;
+                body[std::string(key)] = std::string(value);
                 token = strtok(NULL, ",");
             }
         }
         else
         {
-            body["body"] = body_fields;
+            body["body"] = std::string(body_fields);
         }
     }
     return body;
@@ -80,10 +89,9 @@ HttpRequest::HttpRequest(char* request_string)
         if (requested[i] == '\n' && requested[i + 1] == '\n')
         {
             requested[i+1] = '|';
-            break;
         }
     }
-    char* request_line = strtok(requested, "\n");
+    char* request_line = strtok(requested, "\n"); 
     char* header_fields = strtok(NULL, "|");
     char* body = strtok(NULL, "|");
 
@@ -101,12 +109,12 @@ std::unordered_map<std::string, std::string> HttpRequest::get_request_line_field
     return this->request_line_fields;
 }
 
-std::unordered_map<char*, char*> HttpRequest::get_header_fields()
+std::unordered_map<std::string, std::string> HttpRequest::get_header_fields()
 {
     return this->header_fields;
 }
 
-std::unordered_map<char*, char*> HttpRequest::get_body_fields()
+std::unordered_map<std::string, std::string> HttpRequest::get_body_fields()
 {
     return this->body_fields;
 }
@@ -114,5 +122,6 @@ std::unordered_map<char*, char*> HttpRequest::get_body_fields()
 HttpRequest::~HttpRequest()
 {
     this->request_line_fields.clear();
+    this->body_fields.clear();
     this->header_fields.clear();
 }
