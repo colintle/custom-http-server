@@ -68,3 +68,9 @@ int Server::get_backlog() const {
 int Server::get_socket_fd() const {
 	return this->socket_fd;
 }
+
+void Server::launch(){
+}
+
+Server::~Server(){
+}
