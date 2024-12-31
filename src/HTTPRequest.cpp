@@ -46,6 +46,33 @@ HttpMethods extract_method(char* method)
     }
 }
 
+std::string get_method_string(HttpMethods method)
+{
+    switch (method)
+    {
+    case GET:
+        return "GET";
+    case POST:
+        return "POST";
+    case PUT:
+        return "PUT";
+    case HEAD:
+        return "HEAD";
+    case PATCH:
+        return "PATCH";
+    case DELETE:
+        return "DELETE";
+    case CONNECT:
+        return "CONNECT";
+    case OPTIONS:
+        return "OPTIONS";
+    case TRACE:
+        return "TRACE";
+    default:
+        return "GET";
+    }
+}
+
 std::unordered_map<std::string, std::string> parse_header_fields(char* header_fields)
 {
     std::unordered_map<std::string, std::string> headers;

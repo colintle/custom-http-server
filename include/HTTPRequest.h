@@ -34,4 +34,6 @@ class HttpRequest
         ~HttpRequest();
 };
 
+std::string get_method_string(HttpMethods method);
+
 #endif
