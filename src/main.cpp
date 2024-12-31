@@ -1,7 +1,7 @@
 #include <iostream>
 #include <unistd.h>
 #include <server.h>
-#include <HTTPRequest.h>
+#include <HttpRequest.h>
 
 void launch_server(Server& server){
 	while (true){
@@ -33,5 +33,3 @@ int main()
 	launch_server(server);
 	return 0;
 }
-
-
