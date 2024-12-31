@@ -7,7 +7,7 @@
 
 class Server
 {
-	private:
+	protected:
 		int domain;
 		int service;
 		int protocol;
@@ -34,7 +34,7 @@ class Server
 		void start();
 
 		virtual void launch();
-		virtual ~Server();
+		~Server();
 };
 
 #endif
