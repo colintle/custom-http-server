@@ -13,8 +13,9 @@ class HttpServer: public Server
         ~HttpServer();
 
         void registerRoutes(const std::string& uri, RouteHandler handler, const std::vector<std::string>& methods);
-        void launch();
-        static std::string renderTemplate(const std::vector<std::string>& templates);
+        void launch() override;
 };
+
+std::string renderTemplate(const std::vector<std::string>& templates);
 
 #endif
