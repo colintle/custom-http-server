@@ -37,38 +37,34 @@ void Server::start(){
 	}
 }
 
-int Server::get_domain(){
+int Server::get_domain() const {
 	return this->domain;
 }
 
-int Server::get_service(){
+int Server::get_service() const {
 	return this->service;
 }
 
-int Server::get_protocol(){
+int Server::get_protocol() const {
 	return this->protocol;
 }
 
-u_long Server::get_interface(){
+u_long Server::get_interface() const {
 	return this->interface;
 }
 
-struct sockaddr_in& Server::get_address(){
+const struct sockaddr_in& Server::get_address() const {
 	return this->address;
 }
 
-int Server::get_port(){
+int Server::get_port() const {
 	return this->port;
 }
 
-int Server::get_backlog(){
+int Server::get_backlog() const {
 	return this->backlog;
 }
 
-int Server::get_socket_fd(){
+int Server::get_socket_fd() const {
 	return this->socket_fd;
-}
-
-Server::~Server(){
-	return;
 }

@@ -22,18 +22,19 @@ class Server
 	public:
 		Server(int domain, int service, int protocol, u_long interface, int port, int backlog);
 
-		int get_domain();
-		int get_service();
-		int get_protocol();
-		u_long get_interface();
-		struct sockaddr_in& get_address();
-		int get_port();
-		int get_backlog();
-		int get_socket_fd();
+		int get_domain() const;
+		int get_service() const;
+		int get_protocol() const;
+		u_long get_interface() const;
+		const struct sockaddr_in& get_address() const;
+		int get_port() const;
+		int get_backlog() const;
+		int get_socket_fd() const;
 
 		void start();
-		void stop();
-		~Server();
+
+		virtual void launch();
+		virtual ~Server();
 };
 
 #endif
