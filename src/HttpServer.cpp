@@ -32,6 +32,11 @@ void HttpServer::launch()
 	}
 }
 
+void HttpServer::registerRoutes(const std::string& uri, RouteHandler handler, const std::vector<std::string>& methods)
+{
+	return;
+}
+
 HttpServer::~HttpServer()
 {
     return;
