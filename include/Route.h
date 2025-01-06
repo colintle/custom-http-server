@@ -1,20 +1,21 @@
 #ifndef ROUTE_H
 #define ROUTE_H
 
+#include <HttpServer.h>
+#include <HttpRequest.h>
+#include <Route.h>
 #include <string>
-#include "HttpServer.h"
-#include "HttpRequest.h"
 
 class Route
 {
     private:
         std::string uri;
-        int methods[9];
+        HttpMethods method;
         std::function<std::string(HttpServer&, HttpRequest&)> handler;
     public:
-        Route(const std::string& uri, const std::string& method, const std::string& response);
+        Route(const std::string& uri, const std::string& method, const std::function<std::string(HttpServer&, HttpRequest&)>& handler);
         std::string get_uri() const;
-        int get_method() const;
+        HttpMethods get_method() const;
         ~Route();
 };
 

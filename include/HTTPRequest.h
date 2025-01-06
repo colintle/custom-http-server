@@ -35,5 +35,6 @@ class HttpRequest
 };
 
 std::string get_method_string(HttpMethods method);
+HttpMethods extract_method(const char* method);
 
 #endif
