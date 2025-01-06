@@ -1,5 +1,6 @@
-#include <HttpServer.h>
-#include <HttpRequest.h>
+#include "HttpServer.h"
+#include "HttpRequest.h"
+#include "Route.h"
 #include <iostream>
 #include <unistd.h>
 
@@ -33,9 +34,10 @@ void HttpServer::launch()
 	}
 }
 
-void HttpServer::registerRoutes(const std::string& uri, RouteHandler handler, const std::vector<std::string>& methods)
+void HttpServer::registerRoutes(const std::string& uri, const std::string& method, RouteHandler handler)
 {
-	
+	Route route = Route(uri, method, handler);
+	this->routes[uri] = route;
 	return;
 }
 
@@ -43,4 +45,3 @@ HttpServer::~HttpServer()
 {
     return;
 }
-

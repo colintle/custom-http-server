@@ -1,6 +1,7 @@
 #include "Route.h"
+#include "HttpMethods.h"
 
-Route::Route(const std::string& uri, const std::string& method, const std::function<std::string(HttpServer&, HttpRequest&)>& handler)
+Route::Route(const std::string& uri, const std::string& method, const std::function<std::string(HttpRequest& request)>& handler)
 {
     this->uri = uri;
     this->handler = handler;
@@ -21,4 +22,3 @@ Route::~Route()
 {
     return;
 }
-

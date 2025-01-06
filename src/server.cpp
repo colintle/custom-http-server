@@ -1,4 +1,4 @@
-#include "server.h"
+#include "Server.h"
 #include <stdio.h>
 
 Server::Server(int domain, int service, int protocol, u_long interface, int port, int backlog)

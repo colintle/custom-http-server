@@ -1,23 +1,12 @@
 #ifndef HTTPREQUEST_H
 #define HTTPREQUEST_H
 
+#include "HttpMethods.h"
+
 #include <unordered_map>
 #include <variant>
 #include <string>
 #include <stdio.h>
-
-enum HttpMethods
-{
-    GET,
-    POST,
-    PUT,
-    HEAD,
-    PATCH,
-    DELETE,
-    CONNECT,
-    OPTIONS,
-    TRACE
-};
 
 class HttpRequest
 {
@@ -33,8 +22,5 @@ class HttpRequest
         std::unordered_map<std::string, std::string> get_body_fields();
         ~HttpRequest();
 };
-
-std::string get_method_string(HttpMethods method);
-HttpMethods extract_method(const char* method);
 
 #endif
