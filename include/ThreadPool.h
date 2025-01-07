@@ -11,16 +11,15 @@
 class ThreadPool
 {
     private:
-        vector<thread> threads_;
-        queue<function<void()> > tasks_;
-        mutex queue_mutex_;
-        condition_variable cv_;
+        std::vector<std::thread> threads_;
+        std::queue<std::function<void()> > tasks_;
+        std::mutex queue_mutex_;
+        std::condition_variable cv_;
         bool stop_ = false;
         
     public:
         ThreadPool(int num_threads);
-        void add_task(void (*task)(void*), void* args);
-        void enqueue();
+        void enqueue(std::function<void()> task);
         ~ThreadPool();
 };
 
