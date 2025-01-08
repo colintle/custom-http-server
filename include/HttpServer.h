@@ -16,6 +16,7 @@ class HttpServer: public Server
         ~HttpServer();
 
         void registerRoutes(const std::string& uri, const std::string& method, RouteHandler handler);
+        void handle_request(int clientSocket);
         void launch() override;
 };
 
