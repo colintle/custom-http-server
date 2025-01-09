@@ -48,6 +48,7 @@ void HttpServer::handle_request(int clientSocket) {
             "Content-Type: text/plain\n"
             "Content-Length: 12\n\n"
             "Hello world!";
+		
         write(clientSocket, response, strlen(response));
     } catch (const std::exception& e) {
         std::cerr << "Error handling client request: " << e.what() << std::endl;
@@ -55,9 +56,9 @@ void HttpServer::handle_request(int clientSocket) {
     close(clientSocket);
 }
 
-void HttpServer::registerRoutes(const std::string& uri, const std::string& method, RouteHandler handler)
+void HttpServer::register_route(const std::string& uri, const std::string& method, const std::string& file_path)
 {
-	Route route = Route(uri, method, handler);
+	Route route = Route(uri, method, file_path);
 	this->routes[uri] = route;
 	return;
 }
