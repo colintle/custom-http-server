@@ -120,6 +120,11 @@ std::unordered_map<std::string, std::string> HttpRequest::get_body_fields()
     return this->body_fields;
 }
 
+std::string HttpRequest::get_uri()
+{
+    return std::get<std::string>(this->request_line_fields["uri"]);
+}
+
 HttpRequest::~HttpRequest()
 {
     this->request_line_fields.clear();

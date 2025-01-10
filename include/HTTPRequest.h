@@ -20,6 +20,7 @@ class HttpRequest
         std::unordered_map<std::string, std::variant<HttpMethods, std::string>> get_request_line_fields();
         std::unordered_map<std::string, std::string> get_header_fields();
         std::unordered_map<std::string, std::string> get_body_fields();
+        std::string get_uri();
         ~HttpRequest();
 };
 
